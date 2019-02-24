@@ -1,0 +1,9 @@
+sourceOrganization:
+  name: ""
+  personalAccessToken: ""
+  apiVersion: "5.0"
+
+destinationrganization:
+  name: "hinrek"
+  personalAccessToken: ""
+  apiVersion: "5.0"
