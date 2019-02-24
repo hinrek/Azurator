@@ -1,3 +1,4 @@
-Configuration file templates or default configs.
+# Configuration file templates or default configs.
 
-Put your confd or consul-template template files here.
+* Make a copy of template.yml -> config.yml
+* Fill in the required information
