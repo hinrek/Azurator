@@ -57,9 +57,9 @@ func main() {
 
 	fmt.Println(conf)
 
-	organization := "hinrek"
-	apiVersion := "5.0"
-	personalAccessToken := "k733tcck77uz3yugrnwlcrltmnof3ihthml6heckpnoqzazraywq"
+	organization := conf.SourceOrganization.Name
+	apiVersion := conf.SourceOrganization.APIVersion
+	personalAccessToken := conf.SourceOrganization.PersonalAccessToken
 
 	client := &http.Client{Timeout: 10 * time.Second}
 
