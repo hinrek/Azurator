@@ -16,18 +16,21 @@ type Conf struct {
 		APIVersion          string `yaml:"apiVersion"`
 	} `yaml:"sourceOrganization"`
 
-	Destinationrganization struct {
+	DestinationOrganization struct {
 		Name                string `yaml:"name"`
 		PersonalAccessToken string `yaml:"personalAccessToken"`
 		APIVersion          string `yaml:"apiVersion"`
-	} `yaml:"destinationrganization"`
+	} `yaml:"destinationOrganization"`
 }
 
 // GetConf returns configuration
 func (c *Conf) GetConf() *Conf {
-	// Got some help from https://stackoverflow.com/questions/30947534/reading-a-yaml-file-in-golang
-	yamlFile := filereader.ReadFile("configs/config.yml")
-	err := yaml.Unmarshal(yamlFile, c)
+	return c.setConf()
+}
+
+func (c *Conf) setConf() *Conf {
+	bytes := filereader.ReadFile("configs/config.yml")
+	err := yaml.Unmarshal(bytes, c)
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
 	}
