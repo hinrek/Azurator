@@ -9,30 +9,14 @@ import (
 	"time"
 
 	"github.com/hinrek/Azurator/models/configuration"
+	"github.com/hinrek/Azurator/models/project"
 )
 
 func main() {
 	var c configuration.Conf
+	var projects project.Projects
+
 	conf := c.GetConf()
-
-	type Project struct {
-		ID             string    `json:"id"`
-		Name           string    `json:"name"`
-		URL            string    `json:"url"`
-		State          string    `json:"state"`
-		Revision       int       `json:"revision"`
-		Visibility     string    `json:"visibility"`
-		LastUpdateTime time.Time `json:"lastUpdateTime"`
-		Description    string    `json:"description,omitempty"`
-	}
-
-	type Projects struct {
-		Count   int       `json:"count"`
-		Project []Project `json:"value"`
-	}
-
-	var projects Projects
-
 	fmt.Println(conf)
 
 	organization := conf.SourceOrganization.Name
@@ -47,7 +31,9 @@ func main() {
 	req.SetBasicAuth("", personalAccessToken)
 
 	resp, err := client.Do(req)
-	if err != nil {
+	if resp.StatusCode != 200 {
+		log.Fatalf("API response: %d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	} else if err != nil {
 		log.Fatal(err)
 	}
 
