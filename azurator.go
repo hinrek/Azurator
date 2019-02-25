@@ -8,24 +8,12 @@ import (
 	"net/http"
 	"time"
 
-	yaml "gopkg.in/yaml.v2"
+	"github.com/hinrek/Azurator/models/configuration"
 )
 
-type Conf struct {
-	SourceOrganization struct {
-		Name                string `yaml:"name"`
-		PersonalAccessToken string `yaml:"personalAccessToken"`
-		APIVersion          string `yaml:"apiVersion"`
-	} `yaml:"sourceOrganization"`
-
-	Destinationrganization struct {
-		Name                string `yaml:"name"`
-		PersonalAccessToken string `yaml:"personalAccessToken"`
-		APIVersion          string `yaml:"apiVersion"`
-	} `yaml:"destinationrganization"`
-}
-
 func main() {
+	var c configuration.Conf
+	conf := c.GetConf()
 
 	type Project struct {
 		ID             string    `json:"id"`
@@ -44,16 +32,6 @@ func main() {
 	}
 
 	var projects Projects
-	var conf Conf
-
-	yamlFile, err := ioutil.ReadFile("configs/config.yml")
-	if err != nil {
-		log.Printf("yamlFile.Get err   #%v ", err)
-	}
-	err = yaml.Unmarshal(yamlFile, &conf)
-	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
-	}
 
 	fmt.Println(conf)
 
