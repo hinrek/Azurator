@@ -1,8 +1,3 @@
-# Go
-# Build and test your Go application.
-# Add steps that save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/go
-
 pool:
   vmImage: 'Ubuntu 16.04'
 
@@ -24,46 +19,22 @@ steps:
       echo '##vso[task.prependpath]$(GOROOT)/bin'
     displayName: 'Set up the Go workspace'
 
+  - script: go get -v -t -d ./...
+    workingDirectory: '$(modulePath)'
+    displayName: 'go get dependencies'
+
   - script: |
-      go version
-      go get -v -t -d ./...
       if [ -f Gopkg.toml ]; then
           curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
           dep ensure
       fi
-      go get github.com/jstemmer/go-junit-report
-      go get github.com/axw/gocov/gocov
-      go get github.com/AlekSi/gocov-xml
-      go get -u gopkg.in/matm/v1/gocov-html
     workingDirectory: '$(modulePath)'
-    displayName: 'Get dependencies'
+    displayName: 'Download dep and run `dep ensure`'
 
-  - script: |
-      go test -v -coverprofile=coverage.txt -covermode count 2>&1 | go-junit-report > junit.xml
-      gocov convert coverage.txt > coverage.json
-      gocov-xml < coverage.json > coverage.xml
-      gocov-html < coverage.json > index.html
-      mkdir reports
-      cp junit.xml ./reports/junit.xml
-      cp coverage.xml ./reports/coverage.xml
-      cp index.html ./reports/index.html
-    continueOnError: 'true'
+  - script: go test -v ./...
     workingDirectory: '$(modulePath)'
-    displayName: 'Run unit tests'
+    displayName: 'Run tests'
 
-  - script: |
-      go build -v
+  - script: go build -v .
     workingDirectory: '$(modulePath)'
-    continueOnError: 'true'
-    displayName: 'Build app'
-
-  - task: PublishTestResults@2
-    inputs:
-      testRunner: JUnit
-      testResultsFiles: '$(modulePath)/reports/junit.xml'
-
-  - task: PublishCodeCoverageResults@1
-    inputs:
-      codeCoverageTool: 'cobertura'
-      summaryFileLocation: '$(modulePath)/reports/coverage.xml'
-      reportDirectory: '$(modulePath)/reports/'
+    displayName: 'Build'
