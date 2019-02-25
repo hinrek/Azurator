@@ -3,7 +3,7 @@ sourceOrganization:
   personalAccessToken: ""
   apiVersion: "5.0"
 
-destinationrganization:
-  name: "hinrek"
+destinationOrganization:
+  name: ""
   personalAccessToken: ""
   apiVersion: "5.0"
