@@ -5,10 +5,10 @@ import (
 	"log"
 )
 
-func ReadFile(filePath string) []byte {
-	yamlFile, err := ioutil.ReadFile(filePath)
+func ReadFile(path string) []byte {
+	content, err := ioutil.ReadFile(path)
 	if err != nil {
 		log.Printf("Reading file error: #%v", err)
 	}
-	return yamlFile
+	return content
 }
