@@ -17,7 +17,7 @@ func TestReadFile(t *testing.T) {
 		{
 			name: "Should pass with correct path and content",
 			args: args{path: "../test/testdata/test_template.yml"},
-			want: []byte("testyaml:"),
+			want: []byte("testyamal:"),
 		},
 	}
 	for _, tt := range tests {
