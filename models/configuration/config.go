@@ -1,11 +1,10 @@
 package configuration
 
 import (
+	"github.com/hinrek/Azurator/filereader"
 	"log"
 
-	"github.com/hinrek/Azurator/filereader"
-
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 // Conf struct is for holding configuration
@@ -29,8 +28,8 @@ func (c *Conf) GetConf() *Conf {
 }
 
 func (c *Conf) setConf() *Conf {
-	bytes := filereader.ReadFile("configs/config.yml")
-	err := yaml.Unmarshal(bytes, c)
+	bytes, err := filereader.ReadFile("configs/config.yml")
+	err = yaml.Unmarshal(bytes, c)
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
 	}
