@@ -10,19 +10,31 @@ func TestReadFile(t *testing.T) {
 		path string
 	}
 	tests := []struct {
-		name string
-		args args
-		want []byte
+		name    string
+		args    args
+		want    []byte
+		wantErr bool
 	}{
 		{
-			name: "Should pass with correct path and content",
-			args: args{path: "../test/testdata/test_template.yml"},
-			want: []byte("testyaml:"),
+			name:    "Should pass with correct path and content",
+			args:    args{path: "../test/testdata/test_template.yml"},
+			want:    []byte("testyaml:"),
+			wantErr: false,
+		},
+		{
+			name:    "Should error with incorrect path",
+			args:    args{path: "test_template.yml"},
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ReadFile(tt.args.path); !reflect.DeepEqual(got, tt.want) {
+			got, err := ReadFile(tt.args.path)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ReadFile() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ReadFile() = %v, want %v", got, tt.want)
 			}
 		})
