@@ -31,7 +31,13 @@ steps:
     workingDirectory: '$(modulePath)'
     displayName: 'Download dep and run `dep ensure`'
 
-  - script: go test -v ./...
+  - script: |
+      go get -u github.com/jstemmer/go-junit-report
+    workingDirectory: '$(modulePath)'
+    displayName: 'Get dependencies'
+
+  - script: |
+      go test -v ./... 2>&1 | go-junit-report > report.xml
     workingDirectory: '$(modulePath)'
     displayName: 'Run tests'
 
