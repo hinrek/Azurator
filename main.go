@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hinrek/Azurator/models/configuration"
-	"github.com/hinrek/Azurator/models/project"
+	"github.com/hinrek/Azure-migrator/models/configuration"
+	"github.com/hinrek/Azure-migrator/models/project"
 )
 
 func main() {
