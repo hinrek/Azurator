@@ -1,7 +1,7 @@
 package configuration
 
 import (
-	"github.com/hinrek/Azurator/filereader"
+	"github.com/hinrek/Azure-migrator/filereader"
 	"log"
 
 	"gopkg.in/yaml.v2"
