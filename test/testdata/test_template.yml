@@ -1,1 +1,9 @@
-testyaml:
+sourceOrganization:
+  name: "test1"
+  personalAccessToken: "asdasd"
+  apiVersion: "5.0"
+
+destinationOrganization:
+  name: "test2"
+  personalAccessToken: "dsadsa"
+  apiVersion: "5.0"

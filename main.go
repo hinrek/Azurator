@@ -12,13 +12,17 @@ import (
 	"github.com/hinrek/Azure-migrator/models/project"
 )
 
+var (
+	conf     configuration.Conf
+	projects project.Projects
+)
+
+func init() {
+	configFilePath := "configs/config.yml"
+	conf.Configuration(configFilePath)
+}
+
 func main() {
-	var c configuration.Conf
-	var projects project.Projects
-
-	conf := c.GetConf()
-	fmt.Println(conf)
-
 	organization := conf.SourceOrganization.Name
 	apiVersion := conf.SourceOrganization.APIVersion
 	personalAccessToken := conf.SourceOrganization.PersonalAccessToken

@@ -16,14 +16,16 @@ func TestReadFile(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "Should pass with correct path and content",
-			args:    args{path: "../test/testdata/test_template.yml"},
-			want:    []byte("testyaml:"),
+			name: "Should pass with correct path and content",
+			args: args{
+				path: "../test/testdata/test_filereader.yml",
+			},
+			want:    []byte("this is a test file for filereader"),
 			wantErr: false,
 		},
 		{
 			name:    "Should error with incorrect path",
-			args:    args{path: "test_template.yml"},
+			args:    args{path: "wrongFile.txt"},
 			wantErr: true,
 		},
 	}
