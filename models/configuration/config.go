@@ -21,7 +21,7 @@ type Conf struct {
 	} `yaml:"destinationOrganization"`
 }
 
-func (c *Conf) Configuration(path string) *Conf {
+func (c *Conf) Get(path string) *Conf {
 	bytes, err := filereader.ReadFile(path)
 	if err != nil {
 		log.Fatalf("Filereader: %v", err)

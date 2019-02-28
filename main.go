@@ -19,7 +19,7 @@ var (
 
 func init() {
 	configFilePath := "configs/config.yml"
-	conf.Configuration(configFilePath)
+	conf.Get(configFilePath)
 }
 
 func main() {

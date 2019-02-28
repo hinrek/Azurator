@@ -48,8 +48,8 @@ func TestConf_Configuration(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.c.Configuration(tt.args.path); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Conf.Configuration() = %v, want %v", got, tt.want)
+			if got := tt.c.Get(tt.args.path); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Conf.Get() = %v, want %v", got, tt.want)
 			}
 		})
 	}
