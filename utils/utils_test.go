@@ -1,4 +1,4 @@
-package filereader
+package utils
 
 import (
 	"reflect"
@@ -20,7 +20,7 @@ func TestReadFile(t *testing.T) {
 			args: args{
 				path: "../test/testdata/test_filereader.yml",
 			},
-			want:    []byte("this is a test file for filereader"),
+			want:    []byte("this is a test file for utils"),
 			wantErr: false,
 		},
 		{

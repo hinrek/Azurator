@@ -1,10 +1,9 @@
 package project
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/hinrek/Azure-migrator/utils"
 	"github.com/hinrek/Azure-migrator/vsts-api"
-	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -46,11 +45,11 @@ func (projects *Projects) List(organization string, apiVersion string, personalA
 	url := vsts_api.ConstructAzureUrl(organization, "", "projects", apiVersion)
 	httpResponse := vsts_api.ResponseHandler(url, personalAccessToken, client)
 
-	bytes, err := ioutil.ReadAll(httpResponse.Body)
+	bytes, err := utils.ReadResponseBody(*httpResponse)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = json.Unmarshal(bytes, &projects)
+	err = utils.JsonUnmarshal(bytes, &projects)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,11 +62,11 @@ func (project *Project) Get(organization string, projectId string, apiVersion st
 	url := vsts_api.ConstructAzureUrl(organization, "", fmt.Sprintf("projects/%s", projectId), apiVersion)
 	httpResponse := vsts_api.ResponseHandler(url, personalAccessToken, client)
 
-	bytes, err := ioutil.ReadAll(httpResponse.Body)
+	bytes, err := utils.ReadResponseBody(*httpResponse)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = json.Unmarshal(bytes, &project)
+	err = utils.JsonUnmarshal(bytes, &project)
 	if err != nil {
 		log.Fatal(err)
 	}
