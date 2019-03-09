@@ -1,8 +1,12 @@
 package project
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/hinrek/Azure-migrator/vsts-api"
+	"io/ioutil"
+	"log"
+	"net/http"
 )
 
 type Project struct {
@@ -37,12 +41,36 @@ type Projects struct {
 	Project []Project `json:"value"`
 }
 
-func List(organization string, apiVersion string) string {
+func (projects *Projects) List(organization string, apiVersion string, personalAccessToken string, client *http.Client) *Projects {
 	// https://dev.azure.com/{organization}/_apis/projects?api-version=5.0
-	return vsts_api.ConstructAzureUrl(organization, "", "projects", apiVersion)
+	url := vsts_api.ConstructAzureUrl(organization, "", "projects", apiVersion)
+	httpResponse := vsts_api.ResponseHandler(url, personalAccessToken, client)
+
+	bytes, err := ioutil.ReadAll(httpResponse.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = json.Unmarshal(bytes, &projects)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return projects
 }
 
-func Get(organization string, projectId string, apiVersion string) string {
+func (project *Project) Get(organization string, projectId string, apiVersion string, personalAccessToken string, client *http.Client) *Project {
 	// https://dev.azure.com/{organization}/_apis/projects/{projectId}?api-version=5.0
-	return vsts_api.ConstructAzureUrl(organization, "", fmt.Sprintf("projects/%s", projectId), apiVersion)
+	url := vsts_api.ConstructAzureUrl(organization, "", fmt.Sprintf("projects/%s", projectId), apiVersion)
+	httpResponse := vsts_api.ResponseHandler(url, personalAccessToken, client)
+
+	bytes, err := ioutil.ReadAll(httpResponse.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = json.Unmarshal(bytes, &project)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return project
 }

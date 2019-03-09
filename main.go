@@ -1,11 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/hinrek/Azure-migrator/vsts-api"
-	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -25,46 +21,37 @@ func init() {
 }
 
 func main() {
-	organization := conf.SourceOrganization.Name
-	apiVersion := conf.SourceOrganization.APIVersion
-	personalAccessToken := conf.SourceOrganization.PersonalAccessToken
-
 	client := &http.Client{Timeout: 10 * time.Second}
 
-	projectList := project.List(organization, apiVersion)
+	var (
+		sourceOrganization        = conf.SourceOrganization.Name
+		sourceAPIVersion          = conf.SourceOrganization.APIVersion
+		sourcePersonalAccessToken = conf.SourceOrganization.PersonalAccessToken
 
-	resp := vsts_api.RequestHandler(projectList, personalAccessToken, client)
+		//destinationOrganization        = conf.SourceOrganization.Name
+		//destinationAPIVersion          = conf.SourceOrganization.APIVersion
+		//destinationPersonalAccessToken = conf.SourceOrganization.PersonalAccessToken
+	)
 
-	robots, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
+	// Project list
+	projectList := projects.List(sourceOrganization, sourceAPIVersion, sourcePersonalAccessToken, client)
+
+	fmt.Printf("Projects: %+v\n", projectList)
+
+	// TODO: This is test loop, remove before PR completion
+	for _, item := range projectList.Project {
+		println("ITEM: ", item.Name)
 	}
 
-	err = json.Unmarshal(robots, &projects)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Projects: %+v\n", projects)
-
-	resp.Body.Close()
-
-	// ONE PROJECT
+	// One project
 	projectID := "884ddd52-da93-4d20-93f4-ce6b0db92812"
-	project := project.Get(organization, projectID, apiVersion)
+	getProject := singleProject.Get(sourceOrganization, projectID, sourceAPIVersion, sourcePersonalAccessToken, client)
 
-	resp1 := vsts_api.RequestHandler(project, personalAccessToken, client)
-
-	robots1, err := ioutil.ReadAll(resp1.Body)
-	if err != nil {
-		log.Fatal(err)
+	// TODO: This is test loop, remove before PR completion
+	for counter, project := range projectList.Project {
+		getProject := singleProject.Get(sourceOrganization, project.ID, sourceAPIVersion, sourcePersonalAccessToken, client)
+		fmt.Printf("Single project: %d %+v\n", counter, getProject)
 	}
 
-	err = json.Unmarshal(robots1, &singleProject)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Project: %+v\n", singleProject)
-
-	resp1.Body.Close()
-
+	fmt.Printf("Project: %+v\n", getProject)
 }
