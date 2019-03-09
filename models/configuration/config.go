@@ -1,7 +1,7 @@
 package configuration
 
 import (
-	"github.com/hinrek/Azure-migrator/filereader"
+	"github.com/hinrek/Azure-migrator/utils"
 	"log"
 
 	"gopkg.in/yaml.v2"
@@ -22,7 +22,7 @@ type Conf struct {
 }
 
 func (c *Conf) Get(path string) *Conf {
-	bytes, err := filereader.ReadFile(path)
+	bytes, err := utils.ReadFile(path)
 	if err != nil {
 		log.Fatalf("Filereader: %v", err)
 	}

@@ -6,6 +6,10 @@ This tool is in very early stage!
 
 Not to be used if no releases available!
 
+# Configuration
+
+[Configuration](configs/README.md)
+
 # Running tests
 `go test ./...`
 

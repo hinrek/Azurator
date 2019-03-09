@@ -1,10 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -13,8 +10,9 @@ import (
 )
 
 var (
-	conf     configuration.Conf
-	projects project.Projects
+	conf          configuration.Conf
+	projects      project.Projects
+	singleProject project.Project
 )
 
 func init() {
@@ -23,39 +21,35 @@ func init() {
 }
 
 func main() {
-	organization := conf.SourceOrganization.Name
-	apiVersion := conf.SourceOrganization.APIVersion
-	personalAccessToken := conf.SourceOrganization.PersonalAccessToken
-
 	client := &http.Client{Timeout: 10 * time.Second}
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://dev.azure.com/%s/_apis/projects?api-version=%s", organization, apiVersion), nil)
+	var (
+		sourceOrganization        = conf.SourceOrganization.Name
+		sourceAPIVersion          = conf.SourceOrganization.APIVersion
+		sourcePersonalAccessToken = conf.SourceOrganization.PersonalAccessToken
 
-	req.Header.Add("Content-Type", `"application/json"`)
-	req.SetBasicAuth("", personalAccessToken)
+		//destinationOrganization        = conf.SourceOrganization.Name
+		//destinationAPIVersion          = conf.SourceOrganization.APIVersion
+		//destinationPersonalAccessToken = conf.SourceOrganization.PersonalAccessToken
+	)
 
-	resp, err := client.Do(req)
-	if resp.StatusCode != 200 {
-		log.Fatalf("API response: %d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	} else if err != nil {
-		log.Fatal(err)
+	// Project list
+	projectList := projects.List(sourceOrganization, sourceAPIVersion, sourcePersonalAccessToken, client)
+
+	fmt.Printf("Projects: %+v\n", projectList)
+
+	for _, item := range projectList.Project {
+		println("ITEM: ", item.Name)
 	}
 
-	robots, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
+	// One project
+	projectID := "884ddd52-da93-4d20-93f4-ce6b0db92812"
+	getProject := singleProject.Get(sourceOrganization, projectID, sourceAPIVersion, sourcePersonalAccessToken, client)
+
+	for counter, project := range projectList.Project {
+		getProject := singleProject.Get(sourceOrganization, project.ID, sourceAPIVersion, sourcePersonalAccessToken, client)
+		fmt.Printf("Single project: %d %+v\n", counter, getProject)
 	}
 
-	err = json.Unmarshal(robots, &projects)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Projects: %+v\n", projects)
-
-	resp.Body.Close()
+	fmt.Printf("Project: %+v\n", getProject)
 }
-
-// https://{instance}[/{team-project}]/_apis[/{area}]/{resource}?api-version={version}
-// Azure DevOps Services: dev.azure.com/{organization}
-// TFS: {server:port}/tfs/{collection} (the default port is 8080, and the value for collection should be DefaultCollection but can be any collection)
-// resource path: The resource path is as follows: _apis/{area}/{resource}. For example _apis/wit/workitems
