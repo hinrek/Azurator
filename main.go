@@ -38,7 +38,6 @@ func main() {
 
 	fmt.Printf("Projects: %+v\n", projectList)
 
-	// TODO: This is test loop, remove before PR completion
 	for _, item := range projectList.Project {
 		println("ITEM: ", item.Name)
 	}
@@ -47,7 +46,6 @@ func main() {
 	projectID := "884ddd52-da93-4d20-93f4-ce6b0db92812"
 	getProject := singleProject.Get(sourceOrganization, projectID, sourceAPIVersion, sourcePersonalAccessToken, client)
 
-	// TODO: This is test loop, remove before PR completion
 	for counter, project := range projectList.Project {
 		getProject := singleProject.Get(sourceOrganization, project.ID, sourceAPIVersion, sourcePersonalAccessToken, client)
 		fmt.Printf("Single project: %d %+v\n", counter, getProject)
