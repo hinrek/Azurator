@@ -1,6 +1,9 @@
 # Configuration
 configs/config.yml
 
+# idead
+.idea/
+
 # General
 .DS_Store
 .AppleDouble
