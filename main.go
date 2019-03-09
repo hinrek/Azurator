@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/hinrek/Azure-migrator/vsts-api"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -13,8 +14,9 @@ import (
 )
 
 var (
-	conf     configuration.Conf
-	projects project.Projects
+	conf          configuration.Conf
+	projects      project.Projects
+	singleProject project.Project
 )
 
 func init() {
@@ -29,17 +31,9 @@ func main() {
 
 	client := &http.Client{Timeout: 10 * time.Second}
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://dev.azure.com/%s/_apis/projects?api-version=%s", organization, apiVersion), nil)
+	projectList := project.List(organization, apiVersion)
 
-	req.Header.Add("Content-Type", `"application/json"`)
-	req.SetBasicAuth("", personalAccessToken)
-
-	resp, err := client.Do(req)
-	if resp.StatusCode != 200 {
-		log.Fatalf("API response: %d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	} else if err != nil {
-		log.Fatal(err)
-	}
+	resp := vsts_api.RequestHandler(projectList, personalAccessToken, client)
 
 	robots, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -53,9 +47,24 @@ func main() {
 	fmt.Printf("Projects: %+v\n", projects)
 
 	resp.Body.Close()
-}
 
-// https://{instance}[/{team-project}]/_apis[/{area}]/{resource}?api-version={version}
-// Azure DevOps Services: dev.azure.com/{organization}
-// TFS: {server:port}/tfs/{collection} (the default port is 8080, and the value for collection should be DefaultCollection but can be any collection)
-// resource path: The resource path is as follows: _apis/{area}/{resource}. For example _apis/wit/workitems
+	// ONE PROJECT
+	projectID := "884ddd52-da93-4d20-93f4-ce6b0db92812"
+	project := project.Get(organization, projectID, apiVersion)
+
+	resp1 := vsts_api.RequestHandler(project, personalAccessToken, client)
+
+	robots1, err := ioutil.ReadAll(resp1.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = json.Unmarshal(robots1, &singleProject)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Project: %+v\n", singleProject)
+
+	resp1.Body.Close()
+
+}
