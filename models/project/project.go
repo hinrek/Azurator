@@ -1,7 +1,6 @@
 package project
 
 import (
-	"fmt"
 	"github.com/hinrek/Azure-migrator/utils"
 	"github.com/hinrek/Azure-migrator/vsts-api"
 	"log"
@@ -42,7 +41,7 @@ type Projects struct {
 
 func (projects *Projects) List(organization string, apiVersion string, personalAccessToken string, client *http.Client) *Projects {
 	// https://dev.azure.com/{organization}/_apis/projects?api-version=5.0
-	url := vsts_api.ConstructAzureUrl(organization, "", "projects", apiVersion)
+	url := vsts_api.ConstructAzureUrl(organization, "", "projects", "", apiVersion)
 	httpResponse := vsts_api.ResponseHandler(url, personalAccessToken, client)
 
 	bytes, err := utils.ReadResponseBody(*httpResponse)
@@ -59,7 +58,7 @@ func (projects *Projects) List(organization string, apiVersion string, personalA
 
 func (project *Project) Get(organization string, projectId string, apiVersion string, personalAccessToken string, client *http.Client) *Project {
 	// https://dev.azure.com/{organization}/_apis/projects/{projectId}?api-version=5.0
-	url := vsts_api.ConstructAzureUrl(organization, "", fmt.Sprintf("projects/%s", projectId), apiVersion)
+	url := vsts_api.ConstructAzureUrl(organization, "", "projects", projectId, apiVersion)
 	httpResponse := vsts_api.ResponseHandler(url, personalAccessToken, client)
 
 	bytes, err := utils.ReadResponseBody(*httpResponse)

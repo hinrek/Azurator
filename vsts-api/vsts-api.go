@@ -6,9 +6,10 @@ import (
 	"net/http"
 )
 
-func ConstructAzureUrl(teamProject string, area string, resource string, version string) string {
+func ConstructAzureUrl(organization string, project string, area string, resource string, version string) string {
+	// {organization}/{project}/_apis/{area}/{resource}?api-version={version}
 	return fmt.Sprintf(
-		"https://dev.azure.com/%s/_apis/%s/%s?api-version=%s", teamProject, area, resource, version,
+		"https://dev.azure.com/%s/%s/_apis/%s/%s?api-version=%s", organization, project, area, resource, version,
 	)
 }
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/hinrek/Azure-migrator/models/git"
 	"net/http"
 	"time"
 
@@ -13,6 +14,7 @@ var (
 	conf          configuration.Conf
 	projects      project.Projects
 	singleProject project.Project
+	repositories  git.Repositories
 )
 
 func init() {
@@ -52,4 +54,9 @@ func main() {
 	}
 
 	fmt.Printf("Project: %+v\n", getProject)
+
+	// Repositories list
+	repositoriesList := repositories.List(sourceOrganization, "Project%20source", sourceAPIVersion, sourcePersonalAccessToken, client)
+
+	fmt.Printf("Repositories: %+v\n", repositoriesList)
 }
