@@ -28,8 +28,8 @@ type Repositories struct {
 
 func (repositories *Repositories) List(organization string, project string, apiVersion string, personalAccessToken string, client *http.Client) *Repositories {
 	// https://dev.azure.com/{organization}/{project}/_apis/git/repositories?api-version=5.0
-	url := vsts_api.ConstructAzureUrl(organization, project, "git", "repositories", apiVersion)
-	httpResponse := vsts_api.ResponseHandler(url, personalAccessToken, client)
+	url := vsts_api.ConstructAzureUri(organization, project, "git", "repositories", apiVersion)
+	httpResponse := vsts_api.ExecuteRequest("GET", url, personalAccessToken, client)
 
 	bytes, err := utils.ReadResponseBody(*httpResponse)
 	if err != nil {
