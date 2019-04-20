@@ -31,11 +31,7 @@ func (repositories *Repositories) List(organization string, project string, apiV
 	url := vsts_api.ConstructAzureUri(organization, project, "git", "repositories", apiVersion)
 	httpResponse := vsts_api.ExecuteRequest("GET", url, personalAccessToken, client)
 
-	bytes, err := utils.ReadResponseBody(*httpResponse)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = utils.JsonUnmarshal(bytes, &repositories)
+	err := utils.DecodeJson(httpResponse, repositories)
 	if err != nil {
 		log.Fatal(err)
 	}

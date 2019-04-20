@@ -44,11 +44,7 @@ func (projects *Projects) List(organization string, apiVersion string, personalA
 	url := vsts_api.ConstructAzureUri(organization, "", "projects", "", apiVersion)
 	httpResponse := vsts_api.ExecuteRequest("GET", url, personalAccessToken, client)
 
-	bytes, err := utils.ReadResponseBody(*httpResponse)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = utils.JsonUnmarshal(bytes, &projects)
+	err := utils.DecodeJson(httpResponse, projects)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,11 +57,7 @@ func (project *Project) Get(organization string, projectId string, apiVersion st
 	url := vsts_api.ConstructAzureUri(organization, "", "projects", projectId, apiVersion)
 	httpResponse := vsts_api.ExecuteRequest("GET", url, personalAccessToken, client)
 
-	bytes, err := utils.ReadResponseBody(*httpResponse)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = utils.JsonUnmarshal(bytes, &project)
+	err := utils.DecodeJson(httpResponse, project)
 	if err != nil {
 		log.Fatal(err)
 	}
