@@ -7,36 +7,46 @@ import (
 	"net/http"
 )
 
-type Project struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	URL      string `json:"url"`
-	State    string `json:"state"`
-	Revision int    `json:"revision"`
-	Links    struct {
-		Self struct {
-			Href string `json:"href"`
-		} `json:"self"`
-		Collection struct {
-			Href string `json:"href"`
-		} `json:"collection"`
-		Web struct {
-			Href string `json:"href"`
-		} `json:"web"`
-	} `json:"_links"`
-	Visibility  string `json:"visibility"`
-	DefaultTeam struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-		URL  string `json:"url"`
-	} `json:"defaultTeam"`
-	LastUpdateTime string `json:"lastUpdateTime"`
-	Description    string `json:"description,omitempty"`
-}
-
 type Projects struct {
 	Count   int       `json:"count"`
 	Project []Project `json:"value"`
+}
+
+type Project struct {
+	ID             string      `json:"id"`
+	Name           string      `json:"name"`
+	URL            string      `json:"url"`
+	State          string      `json:"state"`
+	Revision       int         `json:"revision"`
+	Links          Links       `json:"_links"`
+	Visibility     string      `json:"visibility"`
+	DefaultTeam    DefaultTeam `json:"defaultTeam"`
+	LastUpdateTime string      `json:"lastUpdateTime"`
+	Description    string      `json:"description,omitempty"`
+}
+
+type DefaultTeam struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	URL  string `json:"url"`
+}
+
+type Links struct {
+	Self       Self       `json:"self"`
+	Collection Collection `json:"collection"`
+	Web        Web        `json:"web"`
+}
+
+type Self struct {
+	Href string `json:"href"`
+}
+
+type Collection struct {
+	Href string `json:"href"`
+}
+
+type Web struct {
+	Href string `json:"href"`
 }
 
 func (projects *Projects) List(organization string, apiVersion string, personalAccessToken string, client *http.Client) *Projects {

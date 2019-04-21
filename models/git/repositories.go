@@ -1,6 +1,7 @@
 package git
 
 import (
+	"github.com/hinrek/Azure-migrator/models/project"
 	"github.com/hinrek/Azure-migrator/utils"
 	"github.com/hinrek/Azure-migrator/vsts-api"
 	"log"
@@ -8,17 +9,12 @@ import (
 )
 
 type Repository struct {
-	ID      string `json:"id"`
-	Name    string `json:"name"`
-	URL     string `json:"url"`
-	Project struct {
-		ID    string `json:"id"`
-		Name  string `json:"name"`
-		URL   string `json:"url"`
-		State string `json:"state"`
-	} `json:"project"`
-	RemoteURL     string `json:"remoteUrl"`
-	DefaultBranch string `json:"defaultBranch,omitempty"`
+	ID            string          `json:"id"`
+	Name          string          `json:"name"`
+	URL           string          `json:"url"`
+	Project       project.Project `json:"project"`
+	RemoteURL     string          `json:"remoteUrl"`
+	DefaultBranch string          `json:"defaultBranch,omitempty"`
 }
 
 type Repositories struct {
