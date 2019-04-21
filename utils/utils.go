@@ -10,10 +10,6 @@ func ReadFile(path string) ([]byte, error) {
 	return ioutil.ReadFile(path)
 }
 
-func ReadResponseBody(response http.Response) ([]byte, error) {
-	return ioutil.ReadAll(response.Body)
-}
-
-func JsonUnmarshal(data []byte, v interface{}) error {
-	return json.Unmarshal(data, v)
+func DecodeJson(response *http.Response, target interface{}) error {
+	return json.NewDecoder(response.Body).Decode(target)
 }

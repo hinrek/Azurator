@@ -6,26 +6,33 @@ import (
 	"net/http"
 )
 
-func ConstructAzureUrl(teamProject string, area string, resource string, version string) string {
+func ConstructAzureUri(organization string, project string, area string, resource string, version string) string {
+	// {organization}/{project}/_apis/{area}/{resource}?api-version={version}
 	return fmt.Sprintf(
-		"https://dev.azure.com/%s/_apis/%s/%s?api-version=%s", teamProject, area, resource, version,
+		"https://dev.azure.com/%s/%s/_apis/%s/%s?api-version=%s", organization, project, area, resource, version,
 	)
 }
 
-func ResponseHandler(request string, personalAccessToken string, client *http.Client) *http.Response {
-	req, err := requestHandler(request, personalAccessToken)
+func ExecuteRequest(method string, uri string, personalAccessToken string, client *http.Client) *http.Response {
+	req := constructRequest(method, uri, personalAccessToken)
 	resp, err := client.Do(req)
-	if resp.StatusCode != 200 {
-		log.Fatalf("API response: %d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
-	} else if err != nil {
+	if err != nil {
 		log.Fatal(err)
 	}
+	if resp.StatusCode != 200 {
+		log.Fatalf("API response: %d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
 	return resp
 }
 
-func requestHandler(request string, personalAccessToken string) (*http.Request, error) {
-	req, err := http.NewRequest("GET", request, nil)
+func constructRequest(method string, uri string, personalAccessToken string) *http.Request {
+	req, err := http.NewRequest(method, uri, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 	req.Header.Add("Content-Type", `"application/json"`)
 	req.SetBasicAuth("", personalAccessToken)
-	return req, err
+
+	return req
 }
