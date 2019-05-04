@@ -107,6 +107,7 @@ func (project *Project) Get(organization string, projectId string, apiVersion st
 	return project
 }
 
+// TODO: Use operations API to check status https://docs.microsoft.com/en-us/rest/api/azure/devops/operations/operations/get?view=azure-devops-rest-5.0
 func (project *Project) Create(organization string, apiVersion string, personalAccessToken string, client *http.Client) *http.Response {
 	// POST https://dev.azure.com/{organization}/_apis/projects?api-version=5.0
 	url := vsts_api.ConstructAzureUri(organization, "", "projects", "", apiVersion)

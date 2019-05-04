@@ -14,3 +14,5 @@ Not to be used if no releases available!
 `go test ./...`
 
 [![Build Status](https://dev.azure.com/hinrek/Azure-migrator%20pipelines/_apis/build/status/hinrek.Azure-migrator?branchName=develop)](https://dev.azure.com/hinrek/Azure-migrator%20pipelines/_build/latest?definitionId=1&branchName=develop)
+
+[![Build Status](https://travis-ci.com/hinrek/Azure-migrator.svg?branch=develop)](https://travis-ci.com/hinrek/Azure-migrator)
