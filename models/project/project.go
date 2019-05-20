@@ -68,19 +68,6 @@ type Web struct {
 	Href string `json:"href"`
 }
 
-type postProcessTemplate struct {
-	TemplateTypeID string `json:"templateTypeId"`
-}
-
-type postVersioncontrol struct {
-	SourceControlType string `json:"sourceControlType"`
-}
-
-type postCapabilities struct {
-	ProcessTemplate postProcessTemplate `json:"processTemplate"`
-	Versioncontrol  postVersioncontrol  `json:"versioncontrol"`
-}
-
 func (projects *Projects) List(organization string, apiVersion string, personalAccessToken string, client *http.Client) *Projects {
 	// https://dev.azure.com/{organization}/_apis/projects?api-version=5.0
 	url := vsts_api.ConstructAzureUri(organization, "", "projects", "", apiVersion)
@@ -107,29 +94,29 @@ func (project *Project) Get(organization string, projectId string, apiVersion st
 	return project
 }
 
-// TODO: Use operations API to check status https://docs.microsoft.com/en-us/rest/api/azure/devops/operations/operations/get?view=azure-devops-rest-5.0
 func (project *Project) Create(organization string, apiVersion string, personalAccessToken string, client *http.Client) *http.Response {
 	// POST https://dev.azure.com/{organization}/_apis/projects?api-version=5.0
 	url := vsts_api.ConstructAzureUri(organization, "", "projects", "", apiVersion)
 
-	postProject := struct {
-		Name         string           `json:"name"`
-		Description  string           `json:"description"`
-		Capabilities postCapabilities `json:"capabilities"`
-		Visibility   string           `json:"visibility"`
-	}{
-		project.Name,
-		project.Description,
-		postCapabilities{
-			postProcessTemplate{
-				project.Capabilities.ProcessTemplate.TemplateTypeID,
-			},
-			postVersioncontrol{
-				project.Capabilities.Versioncontrol.SourceControlType,
-			},
-		},
-		project.Visibility,
-	}
+	var postProject = struct {
+		Name         string `json:"name"`
+		Description  string `json:"description"`
+		Capabilities struct {
+			ProcessTemplate struct {
+				TemplateTypeID string `json:"templateTypeId"`
+			} `json:"processTemplate"`
+			Versioncontrol struct {
+				SourceControlType string `json:"sourceControlType"`
+			} `json:"versioncontrol"`
+		} `json:"capabilities"`
+		Visibility string `json:"visibility"`
+	}{}
+
+	postProject.Name = project.Name
+	postProject.Description = project.Description
+	postProject.Capabilities.Versioncontrol.SourceControlType = project.Capabilities.Versioncontrol.SourceControlType
+	postProject.Capabilities.ProcessTemplate.TemplateTypeID = project.Capabilities.ProcessTemplate.TemplateTypeID
+	postProject.Visibility = project.Visibility
 
 	body, err := json.Marshal(postProject)
 	if err != nil {
