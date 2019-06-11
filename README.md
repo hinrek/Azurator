@@ -1,6 +1,6 @@
 # Azure-migrator
 
-Azure DevOps project migration tool
+Azur e DevOps project migration tool
 
 This tool is in very early stage!
 
