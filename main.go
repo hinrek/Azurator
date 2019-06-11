@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	conf          configuration.Conf
+	conf               configuration.Conf
 	projects      project.Projects
 	singleProject project.Project
 	//repositories  git.Repositories
@@ -25,7 +25,8 @@ func main() {
 	client := &http.Client{Timeout: 10 * time.Second}
 
 	var (
-		sourceOrganization        = conf.SourceOrganization.Name
+		sourceOrganization        
+		= conf.SourceOrganization.Name
 		sourceAPIVersion          = conf.SourceOrganization.APIVersion
 		sourcePersonalAccessToken = conf.SourceOrganization.PersonalAccessToken
 
@@ -51,7 +52,9 @@ func main() {
 	for _, item := range projectList.Project {
 		log.Println("Project: ", item.Name)
 
-		getProject := singleProject.Get(sourceOrganization, item.ID, sourceAPIVersion, sourcePersonalAccessToken, client)
+		getProject 
+		
+  := singleProject.Get(sourceOrganization, item.ID, sourceAPIVersion, sourcePersonalAccessToken, client)
 		getProject.Create(destinationOrganization, destinationAPIVersion, destinationPersonalAccessToken, client)
 	}
 
