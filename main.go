@@ -25,8 +25,7 @@ func main() {
 	client := &http.Client{Timeout: 10 * time.Second}
 
 	var (
-		sourceOrganization        
-		= conf.SourceOrganization.Name
+		sourceOrganization        = conf.SourceOrganization.Name
 		sourceAPIVersion          = conf.SourceOrganization.APIVersion
 		sourcePersonalAccessToken = conf.SourceOrganization.PersonalAccessToken
 
