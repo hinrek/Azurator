@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	conf          configuration.Conf
+	conf               configuration.Conf
 	projects      project.Projects
 	singleProject project.Project
 	//repositories  git.Repositories
@@ -51,7 +51,9 @@ func main() {
 	for _, item := range projectList.Project {
 		log.Println("Project: ", item.Name)
 
-		getProject := singleProject.Get(sourceOrganization, item.ID, sourceAPIVersion, sourcePersonalAccessToken, client)
+		getProject 
+		
+  := singleProject.Get(sourceOrganization, item.ID, sourceAPIVersion, sourcePersonalAccessToken, client)
 		getProject.Create(destinationOrganization, destinationAPIVersion, destinationPersonalAccessToken, client)
 	}
 
